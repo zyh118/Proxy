@@ -15,16 +15,7 @@ namespace CoreProxyIP
 {
     public class HtmlRule
     {
-        private static readonly IConfigurationBuilder ConfigurationBuilder = new ConfigurationBuilder();
-        private static IConfigurationRoot _config = ConfigurationBuilder.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(cfg =>
-        {
-            cfg.Path = "config.json";
-            cfg.ReloadOnChange = true;
-            cfg.Optional = true;
-        }).Build();
-        //获取指定的路径
-        private static string url = _config.GetSection("Url").Value;
-
+        private static string url = "http://127.0.0.1:12306/";
         /// <summary>
         /// 存放代理IP集合
         /// </summary>
@@ -309,66 +300,60 @@ namespace CoreProxyIP
         /// </summary>
         public static void Liunian()
         {
-            //ThreadPool.SetMaxThreads(5, 5);
             while (true)
             {
                 try
                 {
-                    string LiunianUrl = "http://www.89ip.cn/tiqv.php?sxb=&tqsl=5&ports=&ktip=&xl=on&submit=%CC%E1++%C8%A1";
+                    string LiunianUrl = "http://www.89ip.cn/";
                     var html = IWebClient(LiunianUrl);
                     if (!string.IsNullOrEmpty(html))
                     {
-                        foreach (Match m in Regex.Matches(html, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\:\d{1,5}"))
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(html);
+                        var table = doc.DocumentNode.SelectSingleNode("//table[@class='layui-table']");
+                        var trlist = table.SelectNodes("//tr").ToList();
+                        for (int i = 1; i < trlist.Count; i++)
                         {
                             try
                             {
-                                if (m.Success)
+                                var iplist = trlist[i].SelectNodes("td").ToList();
+                                var ip = iplist[0].InnerText.Trim();
+                                var port = iplist[1].InnerText.Trim();
+                                ProxyViewModel proxy = new ProxyViewModel() { Id = string.Format("{0}:{1}", ip, port), ProxyIP = ip, ProxyPort = Convert.ToInt32(port), CreateTime = DateTime.Now, State = 0 };
+                                //判断Ip是否已经存在
+                                if (QueueOperation(proxy, IQueueType.Exsist).First().Key > 0) continue;
+                                #region 启用多线程去验证
+                                IList<Task> itasks = new List<Task>();
+                                CancellationTokenSource isoure = new CancellationTokenSource();
+                                CancellationToken itoken = isoure.Token;
+                                itasks.Add(new Task(() =>
                                 {
-                                    var ipp = m.Value;
-                                    var ip = ipp.ToString().Split(':')[0].ToString();
-                                    var port = Convert.ToInt32(ipp.ToString().Split(':')[1].Replace(":", "").Trim().ToString());
-                                    ProxyViewModel proxy = new ProxyViewModel() { Id = string.Format("{0}:{1}", ip, port), ProxyIP = ip, ProxyPort = port, CreateTime = DateTime.Now, State = 0 };
-                                    if (QueueOperation(proxy, IQueueType.Exsist).First().Key > 0) continue;
-
-
-                                    IList<Task> iTasks = new List<Task>();
-                                    CancellationTokenSource isource = new CancellationTokenSource();
-                                    CancellationToken itoken = isource.Token;
-                                    iTasks.Add(new Task(() =>
+                                    try
                                     {
-                                        using (WebClient web = new WebClient())
+                                        ProxyViewModel taskProxy = new ProxyViewModel()
                                         {
-                                            try
-                                            {
-                                                ProxyViewModel taskProxy = new ProxyViewModel()
-                                                {
-                                                    Id = proxy.Id,
-                                                    CreateTime = proxy.CreateTime,
-                                                    ProxyIP = proxy.ProxyIP,
-                                                    ProxyPort = proxy.ProxyPort,
-                                                    State = proxy.State
-                                                };
-                                                ProxyVerification(taskProxy, "流年");
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                            }
-                                        }
-                                    }, itoken));
-                                    iTasks[0].Start();
-                                    Task.WaitAll(iTasks.ToArray(), (4 * 1000), itoken);
-                                }
+                                            Id = proxy.Id,
+                                            CreateTime = proxy.CreateTime,
+                                            ProxyIP = proxy.ProxyIP,
+                                            ProxyPort = proxy.ProxyPort,
+                                            State = proxy.State
+                                        };
+                                        ProxyVerification(taskProxy, "流年");
+                                    }
+                                    catch (Exception ex)
+                                    { }
+                                }, itoken));
+                                itasks[0].Start();
+                                Task.WaitAll(itasks.ToArray(), (4 * 1000), itoken);
+                                #endregion
                             }
-                            catch (Exception e)
-                            {
-                            }
+                            catch (Exception ex)
+                            { }
                         }
                     }
                 }
                 catch (Exception e)
-                {
-
-                }
+                { }
             }
         }
         /// <summary>
@@ -393,20 +378,16 @@ namespace CoreProxyIP
                             if (td.Count != 8) continue;
                             var ip = td[1].InnerText;
                             int port = Convert.ToInt32(td[2].InnerText);
-
                             ProxyViewModel proxy = new ProxyViewModel() { Id = string.Format("{0}:{1}", ip, port), ProxyIP = ip, ProxyPort = port, CreateTime = DateTime.Now, State = 0 };
                             if (QueueOperation(proxy, IQueueType.Exsist).First().Key > 0) continue;
                             ProxyVerification(proxy, "西刺");
                         }
                         catch (Exception e)
-                        {
-                        }
+                        { }
                     }
                 }
                 catch (Exception e)
-                {
-
-                }
+                { }
                 Thread.Sleep(TimeSpan.FromMinutes(1));
             }
         }
@@ -431,20 +412,16 @@ namespace CoreProxyIP
                             var td = tdList[i].SelectNodes("td").ToList();
                             var ip = td[1].InnerText;
                             int port = Convert.ToInt32(td[2].InnerText);
-
                             ProxyViewModel proxy = new ProxyViewModel() { Id = string.Format("{0}:{1}", ip, port), ProxyIP = ip, ProxyPort = port, CreateTime = DateTime.Now, State = 0 };
                             if (QueueOperation(proxy, IQueueType.Exsist).First().Key > 0) continue;
                             ProxyVerification(proxy, "西刺nn");
                         }
                         catch (Exception e)
-                        {
-                        }
+                        { }
                     }
                 }
                 catch (Exception e)
-                {
-
-                }
+                { }
                 Thread.Sleep(TimeSpan.FromMinutes(1));
             }
         }
@@ -469,20 +446,16 @@ namespace CoreProxyIP
                             var td = tdList[i].SelectNodes("td").ToList();
                             var ip = td[1].InnerText;
                             int port = Convert.ToInt32(td[2].InnerText);
-
                             ProxyViewModel proxy = new ProxyViewModel() { Id = string.Format("{0}:{1}", ip, port), ProxyIP = ip, ProxyPort = port, CreateTime = DateTime.Now, State = 0 };
                             if (QueueOperation(proxy, IQueueType.Exsist).First().Key > 0) continue;
                             ProxyVerification(proxy, "西刺nt");
                         }
                         catch (Exception e)
-                        {
-                        }
+                        { }
                     }
                 }
                 catch (Exception e)
-                {
-
-                }
+                { }
                 Thread.Sleep(TimeSpan.FromMinutes(1));
             }
         }
@@ -495,12 +468,14 @@ namespace CoreProxyIP
         {
             try
             {
-                using (WebClient web = new WebClient())
-                {
-                    Byte[] bytes = web.DownloadData(url);
-                    var d = Encoding.UTF8.GetString(bytes);
-                    return Encoding.UTF8.GetString(bytes);
-                }
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.Headers.Add("Cookie", "__cfduid=dbc0747d4f20e880b1f3fbeddd7ee7f9b1518096123; Hm_lvt_24b7d5cc1b26f24f256b6869b069278e=1518096226; yjs_id=4b3a274b8bb0be2202978cee06964563; yd_cookie=5bc973fb-f37b-425614221fbda95de6a441f2298ff2543cf1; UM_distinctid=1654c7c2cf02a0-09d94a3256c3ad-514d2f1f-144000-1654c7c2cf35bb; CNZZDATA1254651946=1879619778-1534585157-%7C1534585157; Hm_lvt_8ccd0ef22095c2eebfe4cd6187dea829=1534586531; Hm_lpvt_8ccd0ef22095c2eebfe4cd6187dea829=1534586545");
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36";
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                StreamReader sr = new StreamReader(response.GetResponseStream());
+                return sr.ReadToEnd();
             }
             catch (Exception e)
             {

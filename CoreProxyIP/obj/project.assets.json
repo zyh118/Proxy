@@ -4207,26 +4207,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Administrator.USER-20161031IF\\.nuget\\packages\\": {},
+    "C:\\Users\\MyBook\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "E:\\Proxy\\Proxy\\CoreProxyIP\\CoreProxyIP\\CoreProxyIP.csproj",
+      "projectUniqueName": "D:\\Test\\Proxy\\CoreProxyIP\\CoreProxyIP.csproj",
       "projectName": "CoreProxyIP",
-      "projectPath": "E:\\Proxy\\Proxy\\CoreProxyIP\\CoreProxyIP\\CoreProxyIP.csproj",
-      "packagesPath": "C:\\Users\\Administrator.USER-20161031IF\\.nuget\\packages\\",
-      "outputPath": "E:\\Proxy\\Proxy\\CoreProxyIP\\CoreProxyIP\\obj\\",
+      "projectPath": "D:\\Test\\Proxy\\CoreProxyIP\\CoreProxyIP.csproj",
+      "packagesPath": "C:\\Users\\MyBook\\.nuget\\packages\\",
+      "outputPath": "D:\\Test\\Proxy\\CoreProxyIP\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Administrator.USER-20161031IF\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\MyBook\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4250,18 +4247,18 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "HtmlAgilityPack": {
+            "target": "Package",
+            "version": "[1.8.4, )"
+          },
           "Microsoft.Extensions.Configuration.Json": {
             "target": "Package",
-            "version": "2.1.0"
+            "version": "[2.1.0, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "2.0.0",
+            "version": "[2.0.0, )",
             "autoReferenced": true
-          },
-          "HtmlAgilityPack": {
-            "target": "Package",
-            "version": "1.8.4"
           }
         },
         "imports": [

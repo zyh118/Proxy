@@ -20,3 +20,14 @@ E:\Proxy\Proxy\CoreProxyIP\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.Assem
 E:\Proxy\Proxy\CoreProxyIP\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.AssemblyInfo.cs
 E:\Proxy\Proxy\CoreProxyIP\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.dll
 E:\Proxy\Proxy\CoreProxyIP\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.pdb
+D:\Test\Proxy\CoreProxyIP\bin\Debug\netcoreapp2.0\CoreProxyIP.deps.json
+D:\Test\Proxy\CoreProxyIP\bin\Debug\netcoreapp2.0\CoreProxyIP.runtimeconfig.json
+D:\Test\Proxy\CoreProxyIP\bin\Debug\netcoreapp2.0\CoreProxyIP.runtimeconfig.dev.json
+D:\Test\Proxy\CoreProxyIP\bin\Debug\netcoreapp2.0\CoreProxyIP.dll
+D:\Test\Proxy\CoreProxyIP\bin\Debug\netcoreapp2.0\CoreProxyIP.pdb
+D:\Test\Proxy\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.csprojAssemblyReference.cache
+D:\Test\Proxy\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.csproj.CoreCompileInputs.cache
+D:\Test\Proxy\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.AssemblyInfoInputs.cache
+D:\Test\Proxy\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.AssemblyInfo.cs
+D:\Test\Proxy\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.dll
+D:\Test\Proxy\CoreProxyIP\obj\Debug\netcoreapp2.0\CoreProxyIP.pdb
